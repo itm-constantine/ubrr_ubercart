@@ -1,0 +1,159 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the uc_ubrir module.
+ */
+
+/**
+ * Implements hook_requirements().
+ */
+function uc_ubrir_requirements($phase) {
+  $requirements = array();
+  $t = get_t();
+
+  $has_curl = function_exists('curl_init');
+
+  // ubrir WPP requires cURL.
+  if (variable_get('uc_pg_ubrir_wpp_enabled', TRUE)) {
+    $requirements['uc_ubrir_curl'] = array(
+      'title' => $t('cURL'),
+      'value' => $has_curl ? $t('Enabled') : $t('Not found'),
+    );
+    if (!$has_curl) {
+      $requirements['uc_ubrir_curl']['severity'] = REQUIREMENT_ERROR;
+      $requirements['uc_ubrir_curl']['description'] = $t("ubrir WPP requires the PHP <a href='!curl_url'>cURL</a> library.", array('!curl_url' => 'http://php.net/manual/en/curl.setup.php'));
+    }
+  }
+
+  return $requirements;
+}
+
+/**
+ * Implements hook_schema().
+ */
+function uc_ubrir_schema() {
+  $schema = array();
+
+  $schema['uc_ubrir_ipn'] = array(
+    'description' => '',
+    'fields' => array(
+      'ipn_id' => array(
+        'description' => '',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'twpg_id' => array(
+        'description' => '',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+	  'twpg_session' => array(
+        'description' => '',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'order_id' => array(
+        'description' => '{uc_order.order_id}',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'primary key' => array('ipn_id'),
+  );
+
+  return $schema;
+}
+
+/**
+ * Implements hook_install().
+ */
+function uc_ubrir_install() {
+  $t = get_t();
+
+    $schema['uc_ubrir_ipn'] = array(
+    'description' => '',
+    'fields' => array(
+      'ipn_id' => array(
+        'description' => '',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'twpg_id' => array(
+        'description' => '',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+	  'twpg_session' => array(
+        'description' => '',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'order_id' => array(
+        'description' => '{uc_order.order_id}',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'primary key' => array('ipn_id'),
+  );
+
+ // db_create_table('uc_ubrir_ipn', $schema['uc_ubrir_ipn']);
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function uc_ubrir_uninstall() {
+  db_delete('variable')
+    ->condition('name', 'uc_ubrir_%', 'LIKE')
+    ->execute();
+}
+
+/**
+ * Implements hook_update_last_removed().
+ */
+function uc_ubrir_update_last_removed() {
+  // 7.x-3.0-beta2 and earlier were installed with schema version 0,
+  // which causes update.php to fail.
+  return drupal_get_installed_schema_version('uc_ubrir') == 0 ? 0 : 6000;
+}
+
+/*
+ * Removed completely unnecessary update 7000.
+ */
+
+/**
+ * Fix incorrect order status configuration.
+ */
+function uc_ubrir_update_7001() {
+  
+}
+
+/**
+ * Fix incorrect order state configuration.
+ */
+function uc_ubrir_update_7300() {
+ 
+}
+
+/**
+ * Remove unused variable.
+ */
+function uc_ubrir_update_7301() {
+
+}
