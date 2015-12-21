@@ -288,6 +288,7 @@ class Ubrir
 					
 				case '30';
 					exit('data is incorrect');
+					
 					break;
 					
 				default:

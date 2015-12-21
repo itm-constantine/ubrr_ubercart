@@ -511,9 +511,9 @@ function uc_ubrir_order_form_twpg($form, &$form_state, $order) {
 							'order_id' => $order->order_id, 
 							'sert' => variable_get('sert', ''),
 							'amount' => number_format($order->order_total, 2, '.', ''),
-							'approve_url' => url('cart/uc_ubrir/complete/' . uc_cart_get_id(), array('query'=> array('u_status'=>'APPROVED|'.$order->order_id),'absolute' => TRUE)),
-							'cancel_url' => url('cart/uc_ubrir/complete/' . uc_cart_get_id(), array('query'=> array('u_status'=>'CANCELED|'.$order->order_id),'absolute' => TRUE)),
-							'decline_url' => url('cart/uc_ubrir/complete/' . uc_cart_get_id(), array('query'=> array('u_status'=>'DECLINED|'.$order->order_id),'absolute' => TRUE)),
+							'approve_url' => htmlspecialchars(url('cart/uc_ubrir/complete/' . uc_cart_get_id(), array('query'=> array('u_status'=>'APPROVED|'.$order->order_id),'absolute' => TRUE))),
+							'cancel_url' => htmlspecialchars(url('cart/uc_ubrir/complete/' . uc_cart_get_id(), array('query'=> array('u_status'=>'CANCELED|'.$order->order_id),'absolute' => TRUE))),
+							'decline_url' => htmlspecialchars(url('cart/uc_ubrir/complete/' . uc_cart_get_id(), array('query'=> array('u_status'=>'DECLINED|'.$order->order_id),'absolute' => TRUE))),
 							));                    
   $response_order = $bankHandler->prepare_to_pay();
  
